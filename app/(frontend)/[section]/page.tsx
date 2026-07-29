@@ -1,6 +1,8 @@
+import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublicNavigation, getPublishedPosts, type PublicMenu } from "../../../lib/cms";
+import type { Media } from "../../../payload-types";
 
 type Item = { eyebrow: string; title: string; description: string; meta?: string };
 type PageData = { eyebrow: string; title: string; intro: string; featureTitle: string; featureText: string; items: Item[]; note: string };
@@ -75,6 +77,32 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
 
   if (!page && !menu) notFound();
 
+  if (cmsPosts.length === 1) {
+    const post = cmsPosts[0];
+    const image = typeof post.featuredImage === "object" ? post.featuredImage as Media : null;
+    const attachment = typeof post.attachment === "object" ? post.attachment as Media : null;
+
+    return <main className="article-page">
+      <header className="article-header">
+        <p className="eyebrow">{menu?.label ?? page?.eyebrow ?? post.contentType.replaceAll("-", " ")}</p>
+        <h1>{post.title}</h1>
+        <p className="article-excerpt">{post.excerpt}</p>
+        {post.publishedAt && <div className="article-meta">
+          <time dateTime={post.publishedAt}>{new Intl.DateTimeFormat("id-ID", { dateStyle: "long" }).format(new Date(post.publishedAt))}</time>
+        </div>}
+      </header>
+      {image?.url && <figure className="article-hero">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={image.url} alt={image.alt} />
+        {image.caption && <figcaption>{image.caption}</figcaption>}
+      </figure>}
+      <article className="article-body">
+        <RichText data={post.content} />
+        {attachment?.url && <a className="primary article-download" href={attachment.url} download>Unduh lampiran PDF <span aria-hidden="true">↓</span></a>}
+      </article>
+    </main>;
+  }
+
   if (cmsPosts.length || (!page && menu)) {
     const first = cmsPosts[0];
     return <main className="inner-page">
@@ -110,4 +138,3 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
     {section === "tentang" && <section className="contact-block" id="kontak"><p className="eyebrow">Kontak</p><h2>Mari membangun ruang pengetahuan ini bersama.</h2><p>Tambahkan alamat, email organisasi, nomor telepon, dan tautan media sosial resmi pada tahap berikutnya.</p></section>}
   </main>;
 }
-
