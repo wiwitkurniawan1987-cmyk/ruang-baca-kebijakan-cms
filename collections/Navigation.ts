@@ -17,6 +17,17 @@ export const Navigation: CollectionConfig = {
     update: ({ req }) => Boolean(req.user),
     delete: ({ req }) => Boolean(req.user),
   },
+  hooks: {
+    beforeChange: [
+      ({ data, originalDoc }) => {
+        const parentId = typeof data?.parent === "object" ? data.parent?.id : data?.parent;
+        if (originalDoc?.id && parentId === originalDoc.id) {
+          return { ...data, parent: null };
+        }
+        return data;
+      },
+    ],
+  },
   fields: [
     {
       name: "label",

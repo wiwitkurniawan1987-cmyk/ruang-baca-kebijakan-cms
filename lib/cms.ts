@@ -64,7 +64,9 @@ export async function getPublicNavigation(): Promise<PublicMenu[]> {
         description: item.description,
         children: item.children,
       };
-      const parent = item.parentId ? byId.get(item.parentId) : null;
+      const parent = item.parentId && item.parentId !== item.id
+        ? byId.get(item.parentId)
+        : null;
       if (parent) parent.children.push(menu);
       else roots.push(menu);
     }
