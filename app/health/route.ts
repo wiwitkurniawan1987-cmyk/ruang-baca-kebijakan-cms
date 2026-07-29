@@ -1,3 +1,6 @@
+import configPromise from "@payload-config";
+import { getPayload } from "payload";
+
 const databaseVariableCandidates = [
   "DATABASE_URL",
   "DATABASE_URL_UNPOOLED",
@@ -8,7 +11,25 @@ const databaseVariableCandidates = [
   "NEON_DATABASE_URL",
 ];
 
-export function GET() {
+function sanitizeError(error: unknown) {
+  const details = error as {
+    cause?: unknown;
+    code?: unknown;
+    message?: unknown;
+    name?: unknown;
+  };
+  const message = String(details?.message || error || "Unknown database error")
+    .replace(/postgres(?:ql)?:\/\/[^\s"'`]+/gi, "[redacted-database-url]")
+    .replace(/password=[^&\s]+/gi, "password=[redacted]");
+
+  return {
+    name: typeof details?.name === "string" ? details.name : undefined,
+    code: typeof details?.code === "string" ? details.code : undefined,
+    message,
+  };
+}
+
+export async function GET() {
   const detected = databaseVariableCandidates.filter((name) => Boolean(process.env[name]));
   const related = Object.keys(process.env)
     .filter(
@@ -18,9 +39,35 @@ export function GET() {
     )
     .sort();
 
-  return Response.json({
-    ok: true,
-    detected,
-    related,
-  });
+  try {
+    const payload = await getPayload({ config: configPromise });
+    const users = await payload.find({
+      collection: "users",
+      depth: 0,
+      limit: 1,
+    });
+
+    return Response.json({
+      ok: true,
+      detected,
+      related,
+      database: {
+        ok: true,
+        users: users.totalDocs,
+      },
+    });
+  } catch (error) {
+    return Response.json(
+      {
+        ok: false,
+        detected,
+        related,
+        database: {
+          ok: false,
+          error: sanitizeError(error),
+        },
+      },
+      { status: 500 },
+    );
+  }
 }
