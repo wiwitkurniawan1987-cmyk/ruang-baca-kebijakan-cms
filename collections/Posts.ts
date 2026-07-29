@@ -110,7 +110,20 @@ export const Posts: CollectionConfig = {
       label: "Tampilkan sebagai sorotan",
       type: "checkbox",
       defaultValue: false,
-      admin: { position: "sidebar" },
+      admin: {
+        position: "sidebar",
+        description: "Tampilkan artikel pada kartu cokelat di beranda.",
+      },
+    },
+    {
+      name: "mainAgenda",
+      label: "Tampilkan sebagai agenda utama",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        description: "Tampilkan artikel pada kartu hijau Agenda Utama di beranda.",
+      },
     },
     {
       name: "publishedAt",

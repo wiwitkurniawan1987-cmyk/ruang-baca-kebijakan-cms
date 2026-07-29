@@ -216,7 +216,14 @@ export interface Post {
   };
   featuredImage?: (number | null) | Media;
   attachment?: (number | null) | Media;
+  /**
+   * Tampilkan artikel pada kartu cokelat di beranda.
+   */
   featured?: boolean | null;
+  /**
+   * Tampilkan artikel pada kartu hijau Agenda Utama di beranda.
+   */
+  mainAgenda?: boolean | null;
   publishedAt?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
@@ -499,6 +506,7 @@ export interface PostsSelect<T extends boolean = true> {
   featuredImage?: T;
   attachment?: T;
   featured?: T;
+  mainAgenda?: T;
   publishedAt?: T;
   seoTitle?: T;
   seoDescription?: T;

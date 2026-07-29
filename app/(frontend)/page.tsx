@@ -9,6 +9,15 @@ const publications = [
   { type: "Catatan riset", date: "Mei 2026", title: "Agama dan Ruang Publik Sekolah", text: "Kerangka perbandingan untuk memahami kebebasan beragama, netralitas negara, dan kehidupan bersama di sekolah." },
 ];
 
+const fallbackHighlights = [
+  { type: "Kajian terbaru", date: "", title: "Pendidikan Digital dan Keadilan Akses", text: "", href: "/riset-publikasi" },
+  { type: "Diskusi publik", date: "", title: "Sekolah, Negara, dan Masa Depan Demokrasi", text: "", href: "/agenda" },
+];
+
+const fallbackMainAgenda = [
+  { type: "Diskusi publik", date: "Agustus 2026", title: "Sekolah, Negara, dan Masa Depan Demokrasi", text: "", href: "/agenda" },
+];
+
 const contentTypeLabels: Record<string, string> = {
   article: "Artikel",
   "policy-brief": "Policy brief",
@@ -18,8 +27,12 @@ const contentTypeLabels: Record<string, string> = {
 };
 
 export default async function Home() {
-  const cmsPosts = await getPublishedPosts({ limit: 3 });
-  const latest = cmsPosts.length ? cmsPosts.map((post) => ({
+  const [cmsPosts, highlightedPosts, mainAgendaPosts] = await Promise.all([
+    getPublishedPosts({ limit: 3 }),
+    getPublishedPosts({ limit: 2, featured: true }),
+    getPublishedPosts({ limit: 2, mainAgenda: true }),
+  ]);
+  const toCard = (post: (typeof cmsPosts)[number]) => ({
     type: contentTypeLabels[post.contentType] || "Artikel",
     date: post.publishedAt
       ? new Intl.DateTimeFormat("id-ID", { month: "long", year: "numeric" }).format(new Date(post.publishedAt))
@@ -27,7 +40,16 @@ export default async function Home() {
     title: post.title,
     text: post.excerpt,
     href: `/artikel/${post.slug}`,
-  })) : publications.map((item) => ({ ...item, href: "/riset-publikasi" }));
+  });
+  const latest = cmsPosts.length
+    ? cmsPosts.map(toCard)
+    : publications.map((item) => ({ ...item, href: "/riset-publikasi" }));
+  const highlights = highlightedPosts.length
+    ? highlightedPosts.map(toCard)
+    : fallbackHighlights;
+  const mainAgenda = mainAgendaPosts.length
+    ? mainAgendaPosts.map(toCard)
+    : fallbackMainAgenda;
 
   return <main>
     <section className="hero">
@@ -41,8 +63,7 @@ export default async function Home() {
     </section>
 
     <section className="ticker" aria-label="Sorotan">
-      <a href="/riset-publikasi"><i>01</i><span><small>Kajian terbaru</small><strong>Pendidikan Digital dan Keadilan Akses</strong></span><Arrow /></a>
-      <a href="/agenda"><i>02</i><span><small>Diskusi publik</small><strong>Sekolah, Negara, dan Masa Depan Demokrasi</strong></span><Arrow /></a>
+      {highlights.map((item, index) => <a href={item.href} key={item.title}><i>0{index + 1}</i><span><small>{item.type}</small><strong>{item.title}</strong></span><Arrow /></a>)}
     </section>
 
     <section className="intro section-shell">
@@ -57,9 +78,8 @@ export default async function Home() {
     </section>
 
     <section className="public-space">
-      <div className="public-copy"><p className="section-number">03 / Ruang Pengetahuan</p><h2>Buku, perjumpaan, dan percakapan.</h2><p>Perpustakaan dan taman baca menjadi jembatan antara pengetahuan akademik dengan kebutuhan warga sehari-hari.</p></div>
-      <a className="space-card library-card" href="/perpustakaan"><small>Perpustakaan</small><h3>Koleksi kebijakan, pendidikan, filsafat, dan ilmu sosial.</h3><span>Lihat koleksi <Arrow /></span></a>
-      <a className="space-card reading-card" href="/taman-baca"><small>Taman Baca</small><h3>Ruang ramah keluarga untuk membaca dan belajar bersama.</h3><span>Lihat program <Arrow /></span></a>
+      <div className="public-copy"><p className="section-number">03 / Agenda Utama</p><h2>Pertemuan dan percakapan pilihan.</h2><p>Agenda utama yang mempertemukan peneliti, pendidik, warga, dan pembuat kebijakan dalam dialog terbuka.</p></div>
+      {mainAgenda.map((item, index) => <a className={`space-card ${index % 2 === 0 ? "library-card" : "reading-card"}`} href={item.href} key={item.title}><small>{item.type}{item.date ? ` · ${item.date}` : ""}</small><h3>{item.title}</h3><span>Lihat agenda <Arrow /></span></a>)}
     </section>
 
     <section className="agenda-home section-shell">
@@ -68,4 +88,3 @@ export default async function Home() {
     </section>
   </main>;
 }
-

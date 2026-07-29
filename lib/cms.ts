@@ -1,5 +1,5 @@
 import config from "@payload-config";
-import { getPayload } from "payload";
+import { getPayload, type Where } from "payload";
 import type { Navigation, Post, SiteSetting } from "../payload-types";
 
 export type PublicMenu = {
@@ -92,6 +92,8 @@ export async function getSiteSettings(): Promise<SiteSetting | null> {
 export async function getPublishedPosts(options?: {
   limit?: number;
   sectionSlug?: string;
+  featured?: boolean;
+  mainAgenda?: boolean;
 }): Promise<Post[]> {
   try {
     const payload = await payloadClient();
@@ -108,6 +110,15 @@ export async function getPublishedPosts(options?: {
       if (!sectionId) return [];
     }
 
+    const conditions: Where[] = [];
+    if (sectionId) conditions.push({ section: { equals: sectionId } });
+    if (options?.featured !== undefined) {
+      conditions.push({ featured: { equals: options.featured } });
+    }
+    if (options?.mainAgenda !== undefined) {
+      conditions.push({ mainAgenda: { equals: options.mainAgenda } });
+    }
+
     const result = await payload.find({
       collection: "posts",
       depth: 2,
@@ -115,7 +126,7 @@ export async function getPublishedPosts(options?: {
       limit: options?.limit ?? 24,
       overrideAccess: false,
       sort: "-publishedAt",
-      where: sectionId ? { section: { equals: sectionId } } : undefined,
+      where: conditions.length ? { and: conditions } : undefined,
     });
     return result.docs;
   } catch {
