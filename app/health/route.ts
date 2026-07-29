@@ -1,6 +1,3 @@
-import configPromise from "@payload-config";
-import { getPayload } from "payload";
-
 const databaseVariableCandidates = [
   "DATABASE_URL",
   "DATABASE_URL_UNPOOLED",
@@ -40,6 +37,10 @@ export async function GET() {
     .sort();
 
   try {
+    const [{ default: configPromise }, { getPayload }] = await Promise.all([
+      import("@payload-config"),
+      import("payload"),
+    ]);
     const payload = await getPayload({ config: configPromise });
     const users = await payload.find({
       collection: "users",
