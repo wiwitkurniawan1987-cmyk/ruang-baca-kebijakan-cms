@@ -12,11 +12,19 @@ export type PublicMenu = {
 };
 
 export const fallbackNavigation: PublicMenu[] = [
-  { id: "riset", label: "Riset & Publikasi", slug: "riset-publikasi", href: "/riset-publikasi", children: [] },
-  { id: "perpustakaan", label: "Perpustakaan", slug: "perpustakaan", href: "/perpustakaan", children: [] },
-  { id: "taman-baca", label: "Taman Baca", slug: "taman-baca", href: "/taman-baca", children: [] },
+  { id: "fokus-kami", label: "Fokus Kami", slug: "fokus-kami", href: "/fokus-kami", children: [] },
+  { id: "terbitan-terbaru", label: "Terbitan Terbaru", slug: "terbitan-terbaru", href: "/terbitan-terbaru", children: [] },
+  {
+    id: "ruang-pengetahuan",
+    label: "Ruang Pengetahuan",
+    slug: "ruang-pengetahuan",
+    href: "/ruang-pengetahuan",
+    children: [
+      { id: "perpustakaan", label: "Perpustakaan", slug: "perpustakaan", href: "/perpustakaan", children: [] },
+      { id: "taman-baca", label: "Taman Baca", slug: "taman-baca", href: "/taman-baca", children: [] },
+    ],
+  },
   { id: "agenda", label: "Agenda", slug: "agenda", href: "/agenda", children: [] },
-  { id: "tentang", label: "Tentang Kami", slug: "tentang", href: "/tentang", children: [] },
 ];
 
 async function payloadClient() {

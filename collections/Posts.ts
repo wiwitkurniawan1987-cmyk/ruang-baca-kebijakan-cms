@@ -55,13 +55,13 @@ export const Posts: CollectionConfig = {
     },
     {
       name: "section",
-      label: "Menu / submenu tujuan",
+      label: "Tampilkan di menu / submenu",
       type: "relationship",
       relationTo: "navigation",
       required: true,
       admin: {
         position: "sidebar",
-        description: "Artikel akan ditampilkan pada halaman menu atau submenu ini.",
+        description: "Pilih satu halaman tujuan. Daftar ini mengikuti Menu & Submenu yang Anda kelola di dashboard.",
       },
     },
     {

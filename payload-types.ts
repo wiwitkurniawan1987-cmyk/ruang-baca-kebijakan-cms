@@ -161,7 +161,7 @@ export interface User {
   collection: 'users';
 }
 /**
- * Susun menu utama dan submenu yang muncul pada website.
+ * Kelola menu website. Kosongkan Menu induk untuk menu utama, atau pilih Menu induk untuk membuat submenu.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigation".
@@ -174,7 +174,7 @@ export interface Navigation {
    */
   slug: string;
   /**
-   * Kosongkan untuk menu utama; pilih menu induk untuk menjadikannya submenu.
+   * Kosongkan untuk menu utama. Untuk submenu, pilih menu utama tempat submenu ini akan dimasukkan.
    */
   parent?: (number | null) | Navigation;
   order: number;
@@ -194,7 +194,7 @@ export interface Post {
   title: string;
   slug: string;
   /**
-   * Artikel akan ditampilkan pada halaman menu atau submenu ini.
+   * Pilih satu halaman tujuan. Daftar ini mengikuti Menu & Submenu yang Anda kelola di dashboard.
    */
   section: number | Navigation;
   contentType: 'article' | 'policy-brief' | 'working-paper' | 'event' | 'library';

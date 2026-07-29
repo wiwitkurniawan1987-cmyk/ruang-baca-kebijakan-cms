@@ -8,7 +8,7 @@ export const Navigation: CollectionConfig = {
     useAsTitle: "label",
     group: "Struktur Website",
     defaultColumns: ["label", "parent", "order", "enabled"],
-    description: "Susun menu utama dan submenu yang muncul pada website.",
+    description: "Kelola menu website. Kosongkan Menu induk untuk menu utama, atau pilih Menu induk untuk membuat submenu.",
   },
   defaultSort: "order",
   access: {
@@ -55,7 +55,7 @@ export const Navigation: CollectionConfig = {
       relationTo: "navigation",
       admin: {
         position: "sidebar",
-        description: "Kosongkan untuk menu utama; pilih menu induk untuk menjadikannya submenu.",
+        description: "Kosongkan untuk menu utama. Untuk submenu, pilih menu utama tempat submenu ini akan dimasukkan.",
       },
     },
     {

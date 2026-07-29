@@ -63,10 +63,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       {children}
       <footer>
         <div><span className="footer-kicker">{organizationName}</span><h2>{siteName}</h2><p>{tagline}</p></div>
-        <div className="footer-nav"><a href="/riset-publikasi">Publikasi</a><a href="/agenda">Agenda</a><a href="/tentang#kontak">Kontak</a></div>
+        <div className="footer-nav"><a href="/terbitan-terbaru">Publikasi</a><a href="/ruang-pengetahuan">Ruang Pengetahuan</a><a href="/agenda">Agenda</a></div>
         <small>© 2026 {siteName} · Dikelola melalui dashboard konten</small>
       </footer>
     </body></html>
   );
 }
-
