@@ -11,10 +11,15 @@ import { Navigation } from "./collections/Navigation";
 import { Posts } from "./collections/Posts";
 import { Users } from "./collections/Users";
 import { SiteSettings } from "./globals/SiteSettings";
+import { migrations } from "./migrations";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
-const databaseURL = process.env.DATABASE_URL || "file:./ruang-baca-kebijakan.sqlite";
+const databaseURL =
+  process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
+  process.env.POSTGRES_URL_NON_POOLING ||
+  "file:./ruang-baca-kebijakan.sqlite";
 const usesPostgres = /^(postgres|postgresql):\/\//.test(databaseURL);
 const cloudStorageEnabled = Boolean(
   process.env.S3_BUCKET &&
@@ -35,7 +40,10 @@ export default buildConfig({
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "local-only-ruang-baca-secret-change-before-production",
   db: usesPostgres
-    ? postgresAdapter({ pool: { connectionString: databaseURL } })
+    ? postgresAdapter({
+        pool: { connectionString: databaseURL },
+        prodMigrations: migrations,
+      })
     : sqliteAdapter({ client: { url: databaseURL }, wal: true }),
   plugins: [
     s3Storage({
