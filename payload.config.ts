@@ -1,5 +1,4 @@
 import { postgresAdapter } from "@payloadcms/db-postgres";
-import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { s3Storage } from "@payloadcms/storage-s3";
 import path from "node:path";
@@ -26,6 +25,15 @@ const cloudStorageEnabled = Boolean(
   process.env.S3_ACCESS_KEY_ID &&
   process.env.S3_SECRET_ACCESS_KEY,
 );
+const databaseAdapter = usesPostgres
+  ? postgresAdapter({
+      pool: { connectionString: databaseURL },
+      prodMigrations: migrations,
+    })
+  : (await import("@payloadcms/db-sqlite")).sqliteAdapter({
+      client: { url: databaseURL },
+      wal: true,
+    });
 
 export default buildConfig({
   admin: {
@@ -39,12 +47,7 @@ export default buildConfig({
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "local-only-ruang-baca-secret-change-before-production",
-  db: usesPostgres
-    ? postgresAdapter({
-        pool: { connectionString: databaseURL },
-        prodMigrations: migrations,
-      })
-    : sqliteAdapter({ client: { url: databaseURL }, wal: true }),
+  db: databaseAdapter,
   plugins: [
     s3Storage({
       enabled: cloudStorageEnabled,
