@@ -466,7 +466,9 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
       WHERE "parent_id" = (
         SELECT "id" FROM "posts" WHERE "slug" = ${article.slug} LIMIT 1
       ) AND "latest" = true;
+    `)
 
+    await db.execute(sql`
       INSERT INTO "_posts_v" (
         "parent_id", "version_title", "version_slug", "version_section_id",
         "version_content_type", "version_excerpt", "version_content",
