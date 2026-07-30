@@ -106,13 +106,32 @@ export const Posts: CollectionConfig = {
       filterOptions: { mimeType: { equals: "application/pdf" } },
     },
     {
+      name: "eventDate",
+      label: "Tanggal kegiatan",
+      type: "date",
+      admin: {
+        position: "sidebar",
+        condition: (_, siblingData) => siblingData?.contentType === "event",
+        date: { pickerAppearance: "dayAndTime" },
+      },
+    },
+    {
+      name: "eventLocation",
+      label: "Lokasi / format kegiatan",
+      type: "text",
+      admin: {
+        position: "sidebar",
+        condition: (_, siblingData) => siblingData?.contentType === "event",
+      },
+    },
+    {
       name: "featured",
       label: "Tampilkan sebagai sorotan",
       type: "checkbox",
       defaultValue: false,
       admin: {
         position: "sidebar",
-        description: "Tampilkan artikel pada kartu cokelat di beranda.",
+        description: "Tampilkan artikel pada kartu cokelat di beranda. Setelah mengubah pilihan ini, klik Terbitkan.",
       },
     },
     {
@@ -122,7 +141,7 @@ export const Posts: CollectionConfig = {
       defaultValue: false,
       admin: {
         position: "sidebar",
-        description: "Tampilkan artikel pada kartu hijau Agenda Utama di beranda.",
+        description: "Tampilkan artikel pada kartu hijau Agenda Utama di beranda. Setelah mengubah pilihan ini, klik Terbitkan.",
       },
     },
     {

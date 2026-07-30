@@ -10,6 +10,7 @@ import { Navigation } from "./collections/Navigation";
 import { Posts } from "./collections/Posts";
 import { Users } from "./collections/Users";
 import { SiteSettings } from "./globals/SiteSettings";
+import { Homepage } from "./globals/Homepage";
 import { migrations } from "./migrations";
 
 const filename = fileURLToPath(import.meta.url);
@@ -44,7 +45,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Navigation, Posts, Media],
-  globals: [SiteSettings],
+  globals: [SiteSettings, Homepage],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "local-only-ruang-baca-secret-change-before-production",
   db: databaseAdapter,

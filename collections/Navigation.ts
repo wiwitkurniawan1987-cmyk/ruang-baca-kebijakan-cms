@@ -78,5 +78,26 @@ export const Navigation: CollectionConfig = {
       label: "Pengantar halaman",
       type: "textarea",
     },
+    {
+      name: "pageTitle",
+      label: "Judul besar halaman",
+      type: "textarea",
+      admin: { description: "Jika kosong, nama menu akan digunakan sebagai judul halaman." },
+    },
+    {
+      name: "featureTitle",
+      label: "Judul bagian unggulan",
+      type: "text",
+    },
+    {
+      name: "featureDescription",
+      label: "Isi bagian unggulan",
+      type: "textarea",
+    },
+    {
+      name: "note",
+      label: "Catatan halaman",
+      type: "textarea",
+    },
   ],
 };

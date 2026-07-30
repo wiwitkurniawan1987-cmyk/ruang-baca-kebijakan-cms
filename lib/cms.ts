@@ -1,6 +1,6 @@
 import config from "@payload-config";
 import { getPayload, type Where } from "payload";
-import type { Navigation, Post, SiteSetting } from "../payload-types";
+import type { Homepage, Navigation, Post, SiteSetting } from "../payload-types";
 
 export type PublicMenu = {
   id: number | string;
@@ -8,6 +8,10 @@ export type PublicMenu = {
   slug: string;
   href: string;
   description?: string | null;
+  pageTitle?: string | null;
+  featureTitle?: string | null;
+  featureDescription?: string | null;
+  note?: string | null;
   children: PublicMenu[];
 };
 
@@ -52,6 +56,10 @@ export async function getPublicNavigation(): Promise<PublicMenu[]> {
       slug: item.slug,
       href: `/${item.slug}`,
       description: item.description,
+      pageTitle: item.pageTitle,
+      featureTitle: item.featureTitle,
+      featureDescription: item.featureDescription,
+      note: item.note,
       parentId:
         typeof item.parent === "object" && item.parent
           ? item.parent.id
@@ -70,6 +78,10 @@ export async function getPublicNavigation(): Promise<PublicMenu[]> {
         slug: item.slug,
         href: item.href,
         description: item.description,
+        pageTitle: item.pageTitle,
+        featureTitle: item.featureTitle,
+        featureDescription: item.featureDescription,
+        note: item.note,
         children: item.children,
       };
       const parent = item.parentId && item.parentId !== item.id
@@ -90,6 +102,19 @@ export async function getSiteSettings(): Promise<SiteSetting | null> {
     const payload = await payloadClient();
     return await payload.findGlobal({
       slug: "site-settings",
+      overrideAccess: false,
+    });
+  } catch {
+    return null;
+  }
+}
+
+export async function getHomepageSettings(): Promise<Homepage | null> {
+  try {
+    const payload = await payloadClient();
+    return await payload.findGlobal({
+      slug: "homepage",
+      depth: 1,
       overrideAccess: false,
     });
   } catch {

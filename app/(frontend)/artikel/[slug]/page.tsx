@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublishedPost } from "../../../../lib/cms";
 import type { Media, Navigation } from "../../../../payload-types";
+import { EditButton } from "../../EditButton";
 
 export async function generateMetadata({
   params,
@@ -31,6 +32,7 @@ export default async function ArticlePage({
   const attachment = typeof post.attachment === "object" ? post.attachment as Media : null;
 
   return <main className="article-page">
+    <EditButton href={`/admin/collections/posts/${post.id}`} label="Edit artikel" />
     <header className="article-header">
       <p className="eyebrow">{section?.label || post.contentType.replaceAll("-", " ")}</p>
       <h1>{post.title}</h1>
@@ -52,4 +54,3 @@ export default async function ArticlePage({
     </article>
   </main>;
 }
-

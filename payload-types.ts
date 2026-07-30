@@ -95,9 +95,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     'site-settings': SiteSetting;
+    homepage: Homepage;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    homepage: HomepageSelect<false> | HomepageSelect<true>;
   };
   locale: null;
   widgets: {
@@ -180,6 +182,13 @@ export interface Navigation {
   order: number;
   enabled?: boolean | null;
   description?: string | null;
+  /**
+   * Jika kosong, nama menu akan digunakan sebagai judul halaman.
+   */
+  pageTitle?: string | null;
+  featureTitle?: string | null;
+  featureDescription?: string | null;
+  note?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -216,12 +225,14 @@ export interface Post {
   };
   featuredImage?: (number | null) | Media;
   attachment?: (number | null) | Media;
+  eventDate?: string | null;
+  eventLocation?: string | null;
   /**
-   * Tampilkan artikel pada kartu cokelat di beranda.
+   * Tampilkan artikel pada kartu cokelat di beranda. Setelah mengubah pilihan ini, klik Terbitkan.
    */
   featured?: boolean | null;
   /**
-   * Tampilkan artikel pada kartu hijau Agenda Utama di beranda.
+   * Tampilkan artikel pada kartu hijau Agenda Utama di beranda. Setelah mengubah pilihan ini, klik Terbitkan.
    */
   mainAgenda?: boolean | null;
   publishedAt?: string | null;
@@ -489,6 +500,10 @@ export interface NavigationSelect<T extends boolean = true> {
   order?: T;
   enabled?: T;
   description?: T;
+  pageTitle?: T;
+  featureTitle?: T;
+  featureDescription?: T;
+  note?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -505,6 +520,8 @@ export interface PostsSelect<T extends boolean = true> {
   content?: T;
   featuredImage?: T;
   attachment?: T;
+  eventDate?: T;
+  eventLocation?: T;
   featured?: T;
   mainAgenda?: T;
   publishedAt?: T;
@@ -654,6 +671,42 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * Semua judul dan pengantar beranda dikelola di sini. Kartu artikel tetap dikelola melalui Artikel & Materi.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage".
+ */
+export interface Homepage {
+  id: number;
+  heroEyebrow: string;
+  heroTitle: string;
+  heroDescription: string;
+  primaryButtonLabel: string;
+  primaryButtonHref: string;
+  secondaryButtonLabel: string;
+  secondaryButtonHref: string;
+  heroImage?: (number | null) | Media;
+  focusLabel: string;
+  focusTitle: string;
+  focusDescription: string;
+  focusItems?:
+    | {
+        title: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  latestLabel: string;
+  latestTitle: string;
+  mainAgendaLabel: string;
+  mainAgendaTitle: string;
+  mainAgendaDescription: string;
+  agendaLabel: string;
+  agendaTitle: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -664,6 +717,40 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   email?: T;
   phone?: T;
   address?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage_select".
+ */
+export interface HomepageSelect<T extends boolean = true> {
+  heroEyebrow?: T;
+  heroTitle?: T;
+  heroDescription?: T;
+  primaryButtonLabel?: T;
+  primaryButtonHref?: T;
+  secondaryButtonLabel?: T;
+  secondaryButtonHref?: T;
+  heroImage?: T;
+  focusLabel?: T;
+  focusTitle?: T;
+  focusDescription?: T;
+  focusItems?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  latestLabel?: T;
+  latestTitle?: T;
+  mainAgendaLabel?: T;
+  mainAgendaTitle?: T;
+  mainAgendaDescription?: T;
+  agendaLabel?: T;
+  agendaTitle?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
