@@ -32,7 +32,7 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
   const menu = findMenu(menuItems, section);
   if (!menu) notFound();
 
-  if (cmsPosts.length === 1) {
+  if (cmsPosts.length === 1 && menu.children.length === 0) {
     const post = cmsPosts[0];
     const image = typeof post.featuredImage === "object" ? post.featuredImage as Media : null;
     const attachment = typeof post.attachment === "object" ? post.attachment as Media : null;
@@ -60,8 +60,8 @@ export default async function SectionPage({ params }: { params: Promise<{ sectio
   }
 
   const first = cmsPosts[0];
-  const featureTitle = menu.featureTitle || first?.title;
-  const featureDescription = menu.featureDescription || first?.excerpt;
+  const featureTitle = first?.title;
+  const featureDescription = first?.excerpt;
 
   return <main className="inner-page">
     <EditButton href={`/admin/collections/navigation/${menu.id}`} label="Edit halaman" />

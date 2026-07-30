@@ -2,10 +2,10 @@ import type { GlobalConfig } from "payload";
 
 export const Homepage: GlobalConfig = {
   slug: "homepage",
-  label: "Pengaturan Beranda",
+  label: "Teks & Tampilan Beranda",
   admin: {
     group: "Struktur Website",
-    description: "Semua judul dan pengantar beranda dikelola di sini. Kartu artikel tetap dikelola melalui Artikel & Materi.",
+    description: "Hanya untuk judul bagian, pengantar, tombol, dan gambar pembuka. Seluruh kartu serta isi tulisan dikelola melalui Artikel & Materi.",
   },
   access: {
     read: () => true,

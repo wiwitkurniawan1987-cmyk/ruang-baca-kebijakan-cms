@@ -40,10 +40,10 @@ function eventDateParts(post: Post) {
 export default async function Home() {
   const [homepage, latestPosts, highlightedPosts, mainAgendaPosts, agendaPosts] = await Promise.all([
     getHomepageSettings(),
-    getPublishedPosts({ limit: 3 }),
+    getPublishedPosts({ limit: 3, sectionSlug: "terbitan-terbaru" }),
     getPublishedPosts({ limit: 2, featured: true }),
     getPublishedPosts({ limit: 2, mainAgenda: true }),
-    getPublishedPosts({ limit: 1, sectionSlug: "agenda" }),
+    getPublishedPosts({ limit: 1, sectionSlug: "agenda", sort: "eventDate" }),
   ]);
 
   const heroImage = typeof homepage?.heroImage === "object" ? homepage.heroImage as Media : null;

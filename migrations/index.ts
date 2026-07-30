@@ -5,6 +5,7 @@ import * as migration_20260729_212000_normalize_navigation_parents from './20260
 import * as migration_20260730_010000_reset_admin_password from './20260730_010000_reset_admin_password';
 import * as migration_20260730_030000_total_cms_sync from './20260730_030000_total_cms_sync';
 import * as migration_20260730_040000_backfill_post_versions from './20260730_040000_backfill_post_versions';
+import * as migration_20260730_050000_complete_editorial_content from './20260730_050000_complete_editorial_content';
 
 export const migrations = [
   {
@@ -41,5 +42,10 @@ export const migrations = [
     up: migration_20260730_040000_backfill_post_versions.up,
     down: migration_20260730_040000_backfill_post_versions.down,
     name: '20260730_040000_backfill_post_versions'
+  },
+  {
+    up: migration_20260730_050000_complete_editorial_content.up,
+    down: migration_20260730_050000_complete_editorial_content.down,
+    name: '20260730_050000_complete_editorial_content'
   },
 ];

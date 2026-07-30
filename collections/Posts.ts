@@ -7,8 +7,8 @@ export const Posts: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     group: "Konten",
-    defaultColumns: ["title", "section", "_status", "publishedAt", "updatedAt"],
-    description: "Tulis artikel atau materi, tambahkan gambar, lalu pilih menu atau submenu tujuan.",
+    defaultColumns: ["title", "contentType", "section", "featured", "mainAgenda", "_status", "publishedAt"],
+    description: "Semua kartu dan tulisan website dikelola di sini. Pilih jenis, menu tujuan, serta penempatan Sorotan atau Agenda Utama.",
     livePreview: {
       url: ({ data }) => `/artikel/${data.slug ?? ""}`,
     },

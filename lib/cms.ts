@@ -127,24 +127,42 @@ export async function getPublishedPosts(options?: {
   sectionSlug?: string;
   featured?: boolean;
   mainAgenda?: boolean;
+  sort?: string;
 }): Promise<Post[]> {
   try {
     const payload = await payloadClient();
-    let sectionId: number | undefined;
+    let sectionIds: number[] = [];
 
     if (options?.sectionSlug) {
-      const section = await payload.find({
+      const navigation = await payload.find({
         collection: "navigation",
-        limit: 1,
+        depth: 0,
+        limit: 200,
         overrideAccess: false,
-        where: { slug: { equals: options.sectionSlug } },
+        pagination: false,
+        where: { enabled: { equals: true } },
       });
-      sectionId = section.docs[0]?.id;
-      if (!sectionId) return [];
+      const section = navigation.docs.find((item) => item.slug === options.sectionSlug);
+      if (!section) return [];
+
+      sectionIds = [Number(section.id)];
+      let changed = true;
+      while (changed) {
+        changed = false;
+        for (const item of navigation.docs) {
+          const parentId = typeof item.parent === "object" && item.parent
+            ? Number(item.parent.id)
+            : item.parent ? Number(item.parent) : null;
+          if (parentId && sectionIds.includes(parentId) && !sectionIds.includes(Number(item.id))) {
+            sectionIds.push(Number(item.id));
+            changed = true;
+          }
+        }
+      }
     }
 
     const conditions: Where[] = [];
-    if (sectionId) conditions.push({ section: { equals: sectionId } });
+    if (sectionIds.length) conditions.push({ section: { in: sectionIds } });
     if (options?.featured !== undefined) {
       conditions.push({ featured: { equals: options.featured } });
     }
@@ -158,7 +176,7 @@ export async function getPublishedPosts(options?: {
       draft: false,
       limit: options?.limit ?? 24,
       overrideAccess: false,
-      sort: "-publishedAt",
+      sort: options?.sort ?? "-publishedAt",
       where: conditions.length ? { and: conditions } : undefined,
     });
     return result.docs;
