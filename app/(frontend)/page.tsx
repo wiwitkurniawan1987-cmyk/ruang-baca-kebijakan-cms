@@ -38,8 +38,9 @@ function eventDateParts(post: Post) {
 }
 
 export default async function Home() {
-  const [homepage, latestPosts, highlightedPosts, mainAgendaPosts, agendaPosts] = await Promise.all([
+  const [homepage, focusPosts, latestPosts, highlightedPosts, mainAgendaPosts, agendaPosts] = await Promise.all([
     getHomepageSettings(),
+    getPublishedPosts({ limit: 3, sectionSlug: "fokus-kami", includeChildren: false }),
     getPublishedPosts({ limit: 3, sectionSlug: "terbitan-terbaru" }),
     getPublishedPosts({ limit: 2, featured: true }),
     getPublishedPosts({ limit: 2, mainAgenda: true }),
@@ -76,7 +77,7 @@ export default async function Home() {
     <section className="intro section-shell">
       <p className="section-number">{homepage?.focusLabel}</p>
       <div><h2>{homepage?.focusTitle}</h2><p>{homepage?.focusDescription}</p></div>
-      {homepage?.focusItems?.length ? <div className="pillars">{homepage.focusItems.map((item) => <article key={item.id || item.title}><b>{item.title}</b><p>{item.description}</p></article>)}</div> : null}
+      {focusPosts.length ? <div className="pillars">{focusPosts.map((item) => <a href={`/artikel/${item.slug}`} key={item.id}><b>{item.title}</b><p>{item.excerpt}</p><span aria-hidden="true">→</span></a>)}</div> : null}
     </section>
 
     <section className="publication-section section-shell" id="kajian-terbaru">

@@ -53,6 +53,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const siteName = settings?.siteName || "Ruang Baca Kebijakan";
   const organizationName = settings?.organizationName || "Pusat Studi Kebijakan Pendidikan";
   const tagline = settings?.tagline || "Riset yang jernih, bacaan yang terbuka, dan percakapan publik yang bermakna.";
+  const phoneHref = settings?.phone ? settings.phone.replace(/[^+\d]/g, "") : null;
   return (
     <html lang="id"><body>
       <header className="site-header">
@@ -64,6 +65,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <footer>
         <div><span className="footer-kicker">{organizationName}</span><h2>{siteName}</h2><p>{tagline}</p></div>
         <div className="footer-nav"><a href="/terbitan-terbaru">Publikasi</a><a href="/ruang-pengetahuan">Ruang Pengetahuan</a><a href="/agenda">Agenda</a></div>
+        {(settings?.email || settings?.phone || settings?.address) && <address className="footer-contact">
+          {settings.address && <span>{settings.address}</span>}
+          {settings.email && <a href={`mailto:${settings.email}`}>{settings.email}</a>}
+          {settings.phone && <a href={`tel:${phoneHref}`}>{settings.phone}</a>}
+        </address>}
         <small>© 2026 {siteName} · Dikelola melalui dashboard konten</small>
       </footer>
     </body></html>

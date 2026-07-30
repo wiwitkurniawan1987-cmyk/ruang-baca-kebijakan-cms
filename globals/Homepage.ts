@@ -33,16 +33,6 @@ export const Homepage: GlobalConfig = {
         { name: "focusLabel", label: "Label bagian", type: "text", required: true, defaultValue: "01 / Fokus Kami" },
         { name: "focusTitle", label: "Judul", type: "textarea", required: true, defaultValue: "Menghubungkan riset dengan kehidupan publik." },
         { name: "focusDescription", label: "Pengantar", type: "textarea", required: true, defaultValue: "Kebijakan pendidikan tidak seharusnya berhenti sebagai dokumen teknis. Kami mempertemukan penelitian, pengalaman masyarakat, dan perdebatan filosofis agar pilihan kebijakan dapat diperiksa secara terbuka." },
-        {
-          name: "focusItems",
-          label: "Daftar fokus",
-          type: "array",
-          maxRows: 6,
-          fields: [
-            { name: "title", label: "Judul", type: "text", required: true },
-            { name: "description", label: "Keterangan", type: "textarea", required: true },
-          ],
-        },
       ],
     },
     {

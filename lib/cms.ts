@@ -128,6 +128,7 @@ export async function getPublishedPosts(options?: {
   featured?: boolean;
   mainAgenda?: boolean;
   sort?: string;
+  includeChildren?: boolean;
 }): Promise<Post[]> {
   try {
     const payload = await payloadClient();
@@ -146,16 +147,18 @@ export async function getPublishedPosts(options?: {
       if (!section) return [];
 
       sectionIds = [Number(section.id)];
-      let changed = true;
-      while (changed) {
-        changed = false;
-        for (const item of navigation.docs) {
-          const parentId = typeof item.parent === "object" && item.parent
-            ? Number(item.parent.id)
-            : item.parent ? Number(item.parent) : null;
-          if (parentId && sectionIds.includes(parentId) && !sectionIds.includes(Number(item.id))) {
-            sectionIds.push(Number(item.id));
-            changed = true;
+      if (options.includeChildren !== false) {
+        let changed = true;
+        while (changed) {
+          changed = false;
+          for (const item of navigation.docs) {
+            const parentId = typeof item.parent === "object" && item.parent
+              ? Number(item.parent.id)
+              : item.parent ? Number(item.parent) : null;
+            if (parentId && sectionIds.includes(parentId) && !sectionIds.includes(Number(item.id))) {
+              sectionIds.push(Number(item.id));
+              changed = true;
+            }
           }
         }
       }
